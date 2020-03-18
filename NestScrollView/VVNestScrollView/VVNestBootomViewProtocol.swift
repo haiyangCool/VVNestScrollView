@@ -11,7 +11,6 @@ import UIKit
 
 public protocol VVNestBottomViewProtocol: NSObjectProtocol {
     
-    
     /// 底部图层是否可滑动
     /// - Parameter isScrollEnable: bool
     func nestBottomView(_ isScrollEnable: Bool)
@@ -43,7 +42,4 @@ public protocol VVNestBottomViewProtocol: NSObjectProtocol {
       func scrollOffBottomBaseLine() 
 }
 
-extension VVNestBottomViewProtocol {
-    
-   
-}
+extension VVNestBottomViewProtocol {}

@@ -31,16 +31,16 @@ BottomView should implement NestBottomViewProtol methods
 ******************
 
 */
-class VVNestScrollView: UIView {
+public class VVNestScrollView: UIView {
 
     /// 底部图层需要实现该协议，以获取滑动状态，设置相关操作
-    weak var bottomDelegate: VVNestBottomViewProtocol?
+    public weak var bottomDelegate: VVNestBottomViewProtocol?
     
     /**
      *   scrollView  承载上部图层和下部图层
      *      scrollView 不可响应手势滑动，而是响应我们自定义的滚动方式
      */
-    lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = false
         scrollView.isScrollEnabled = false
@@ -58,12 +58,8 @@ class VVNestScrollView: UIView {
     /// 是否为垂直滑动手势
     fileprivate var verticalScroll: Bool = false
     
-    /**
-     *  新增控制条件
-     *   在 iPhoneX 中由于系统bug，在pan手势开始（began状态）时，无法直接获手指滑动距离
-     *   添加该条件后，通过实时滑动过程中确定滑动方向，滑动方向一经确认，在本次滑动过程中
-     *   方向不再进行变更
-     */
+    /// 实时滑动过程中确定滑动方向，滑动方向一经确认，在该次滑动过程中方向不再进行变更
+
     fileprivate var scrollDirectionConfirmed: Bool = false
     
     /** 顶部图层高度
@@ -78,8 +74,7 @@ class VVNestScrollView: UIView {
     fileprivate var topKeepHeight: CGFloat = 0;
     
     /// 动态滚动item状态
-    lazy var dynamicItem: VVDynamicItem = VVDynamicItem()
-    
+    fileprivate lazy var dynamicItem: VVDynamicItem = VVDynamicItem()
     
     /// 动画执行
     fileprivate var animator: UIDynamicAnimator?
@@ -112,16 +107,13 @@ extension VVNestScrollView {
     
     /// 该方法在配置 topView和tbottomView 之前设置，否则会出现动画执行问题
     /// - Parameter height:
-    func setTopKeepHeight(_ height: CGFloat) {
+    public func setTopKeepHeight(_ height: CGFloat) {
         topKeepHeight = height
         
     }
     
-    /// 配置 top/bottom
-    /// - Parameter top: top View
-    /// - Parameter bottom: bottom View
-    /// - Parameter viewController: 如果 viewController 不为空，则使用viewController的view替换bottomView
-    func configure(_ top: UIView, bottomView bottom: UIView? = nil, bottomVC viewController: UIViewController? = nil) {
+    /// 配置  top View and bottom View
+    public func configure(_ top: UIView, bottomView bottom: UIView? = nil, bottomVC viewController: UIViewController? = nil) {
         if let bottom = bottom {
 
             topView = top
@@ -310,8 +302,12 @@ extension VVNestScrollView {
                 
                 if isMain {
                     self?.scrollView.contentOffset = self!.dynamicItem.center
-                    if self?.scrollView.contentOffset.y == 0 {
+                    if (self?.scrollView.contentOffset.y)! >= CGFloat(0) {
                         self?.scrollView.contentOffset = CGPoint.zero
+                        self?.animator?.removeAllBehaviors()
+                        self?.decelerationBehavior = nil
+                        self?.spingBehavior = nil
+                        
                     }
                 }else {
                     let bottomContentOffsetY = self!.bottomDelegate?.bottomViewContentOffset().y
@@ -321,7 +317,7 @@ extension VVNestScrollView {
                         self?.spingBehavior = nil
                         self?.bottomDelegate?.scrollOffBottomBaseLine()
                     }else {
-                        self?.bottomDelegate?.nestBottonView((self?.dynamicItem.center)!)
+                    self?.bottomDelegate?.nestBottonView((self?.dynamicItem.center)!)
                     }
                     
                 }
@@ -375,7 +371,7 @@ extension VVNestScrollView {
 
 extension VVNestScrollView: UIGestureRecognizerDelegate {
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     

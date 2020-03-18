@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         
         nestView.bottomDelegate = bottomView as VVNestBottomViewProtocol
         nestView.backgroundColor = .brown
-        nestView.setTopKeepHeight(88)
+        nestView.setTopKeepHeight(120)
         nestView.configure(topView, bottomView: bottomView, bottomVC: nil)
         
         view.addSubview(nestView)

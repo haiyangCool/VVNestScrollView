@@ -15,9 +15,9 @@
 		378F551D234042ED00EF5CA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 378F551B234042ED00EF5CA6 /* LaunchScreen.storyboard */; };
 		378F5528234042ED00EF5CA6 /* NestScrollViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F5527234042ED00EF5CA6 /* NestScrollViewTests.swift */; };
 		378F5533234042ED00EF5CA6 /* NestScrollViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F5532234042ED00EF5CA6 /* NestScrollViewUITests.swift */; };
-		378F5544234046FD00EF5CA6 /* VVDynamicItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F5543234046FD00EF5CA6 /* VVDynamicItem.swift */; };
-		378F55462340479300EF5CA6 /* VVNestScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F55452340479300EF5CA6 /* VVNestScrollView.swift */; };
-		378F554823405D7D00EF5CA6 /* VVNestBootomViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F554723405D7D00EF5CA6 /* VVNestBootomViewProtocol.swift */; };
+		378F5544234046FD00EF5CA6 /* DynamicItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F5543234046FD00EF5CA6 /* DynamicItem.swift */; };
+		378F55462340479300EF5CA6 /* NestScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F55452340479300EF5CA6 /* NestScrollView.swift */; };
+		378F554823405D7D00EF5CA6 /* Bottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F554723405D7D00EF5CA6 /* Bottom.swift */; };
 		378F554A23419B3B00EF5CA6 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378F554923419B3B00EF5CA6 /* TestView.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,9 +53,9 @@
 		378F552E234042ED00EF5CA6 /* NestScrollViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NestScrollViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		378F5532234042ED00EF5CA6 /* NestScrollViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestScrollViewUITests.swift; sourceTree = "<group>"; };
 		378F5534234042ED00EF5CA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		378F5543234046FD00EF5CA6 /* VVDynamicItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VVDynamicItem.swift; sourceTree = "<group>"; };
-		378F55452340479300EF5CA6 /* VVNestScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VVNestScrollView.swift; sourceTree = "<group>"; };
-		378F554723405D7D00EF5CA6 /* VVNestBootomViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VVNestBootomViewProtocol.swift; sourceTree = "<group>"; };
+		378F5543234046FD00EF5CA6 /* DynamicItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicItem.swift; sourceTree = "<group>"; };
+		378F55452340479300EF5CA6 /* NestScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestScrollView.swift; sourceTree = "<group>"; };
+		378F554723405D7D00EF5CA6 /* Bottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bottom.swift; sourceTree = "<group>"; };
 		378F554923419B3B00EF5CA6 /* TestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,7 +107,7 @@
 		378F550F234042EB00EF5CA6 /* NestScrollView */ = {
 			isa = PBXGroup;
 			children = (
-				378F55402340464F00EF5CA6 /* VVNestScrollView */,
+				378F55402340464F00EF5CA6 /* NestScrollView */,
 				378F5510234042EB00EF5CA6 /* AppDelegate.swift */,
 				378F5512234042EB00EF5CA6 /* SceneDelegate.swift */,
 				378F554923419B3B00EF5CA6 /* TestView.swift */,
@@ -138,14 +138,14 @@
 			path = NestScrollViewUITests;
 			sourceTree = "<group>";
 		};
-		378F55402340464F00EF5CA6 /* VVNestScrollView */ = {
+		378F55402340464F00EF5CA6 /* NestScrollView */ = {
 			isa = PBXGroup;
 			children = (
-				378F5543234046FD00EF5CA6 /* VVDynamicItem.swift */,
-				378F554723405D7D00EF5CA6 /* VVNestBootomViewProtocol.swift */,
-				378F55452340479300EF5CA6 /* VVNestScrollView.swift */,
+				378F5543234046FD00EF5CA6 /* DynamicItem.swift */,
+				378F554723405D7D00EF5CA6 /* Bottom.swift */,
+				378F55452340479300EF5CA6 /* NestScrollView.swift */,
 			);
-			path = VVNestScrollView;
+			path = NestScrollView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,10 +281,10 @@
 			files = (
 				378F554A23419B3B00EF5CA6 /* TestView.swift in Sources */,
 				378F5515234042EB00EF5CA6 /* ViewController.swift in Sources */,
-				378F55462340479300EF5CA6 /* VVNestScrollView.swift in Sources */,
+				378F55462340479300EF5CA6 /* NestScrollView.swift in Sources */,
 				378F5511234042EB00EF5CA6 /* AppDelegate.swift in Sources */,
-				378F5544234046FD00EF5CA6 /* VVDynamicItem.swift in Sources */,
-				378F554823405D7D00EF5CA6 /* VVNestBootomViewProtocol.swift in Sources */,
+				378F5544234046FD00EF5CA6 /* DynamicItem.swift in Sources */,
+				378F554823405D7D00EF5CA6 /* Bottom.swift in Sources */,
 				378F5513234042EB00EF5CA6 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

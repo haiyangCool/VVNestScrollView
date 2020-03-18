@@ -77,15 +77,40 @@ extension TestView:UITableViewDelegate,UITableViewDataSource {
     }
 
 }
-
-
-
-extension TestView: VVNestBottomViewProtocol {
-    func startTouch() {
+extension TestView: Bottom {
+    func bottomViewContentSize() -> CGSize {
+        return tab.contentSize
+    }
+    
+    func bottomViewHeight() -> CGFloat {
+        return KScreenHeight
+    }
+    
+    func bottomView() -> UIView {
+        return self
+    }
+    
+    func bottomViewScrollEnable(_ enable: Bool) {
+        tab.isScrollEnabled = enable
+    }
+    
+    func bottomViewUpdateContentOffset(_ offset: CGPoint) {
+        tab.contentOffset = offset
+    }
+    
+    func bottomViewContentOffset() -> CGPoint {
+        return tab.contentOffset
+    }
+    
+    func excludeTopHeight() -> CGFloat {
+        return 88
+    }
+    
+    func bottomViewStartTouch() {
         
     }
     
-    func stopTouch() {
+    func bottomViewStopTouch() {
         
     }
     
@@ -93,26 +118,40 @@ extension TestView: VVNestBottomViewProtocol {
         
     }
     
-    func nestBottomView(_ isScrollEnable: Bool) {
-        tab.isScrollEnabled = isScrollEnable
-    }
-    
-    func nestBottonView(_ offset: CGPoint) {
-        tab.contentOffset = offset
-    }
-    
-    func bottomViewContentSize() -> CGSize {
-        return tab.contentSize
-    }
-    
-    func bottomViewContentOffset() -> CGPoint {
-        return tab.contentOffset
-    }
-    
-    func excludeViewHeight() -> CGFloat {
-        return NavHeight
-    }
-    
-    
-    
+
 }
+
+
+//extension TestView: NestBottomViewProtocol {
+//    func startTouch() {
+//
+//    }
+//
+//    func stopTouch() {
+//
+//    }
+//
+//    func scrollOffBottomBaseLine() {
+//        
+//    }
+//
+//    func bottomView(_ isScrollEnable: Bool) {
+//        tab.isScrollEnabled = isScrollEnable
+//    }
+//
+//
+//    func contentSize() -> CGSize {
+//        return tab.contentSize
+//    }
+//
+//    func contentOffset() -> CGPoint {
+//        return tab.contentOffset
+//    }
+//
+//    func excludeTopHeight() -> CGFloat {
+//        return NavHeight
+//    }
+//
+    
+    
+//}

@@ -8,7 +8,7 @@
 
 import UIKit
 import Foundation
-class VVDynamicItem: NSObject, UIDynamicItem {
+class DynamicItem: NSObject, UIDynamicItem {
     var transform: CGAffineTransform
     var center: CGPoint
     var bounds: CGRect

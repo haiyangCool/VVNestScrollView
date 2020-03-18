@@ -24,17 +24,15 @@ class ViewController: UIViewController {
         topView.backgroundColor = .brown
         
         let bottomView = TestView()
-              bottomView.frame = CGRect(x: 0, y: 0, width: 414, height: UIScreen.main.bounds.size.height)
-              bottomView.backgroundColor = UIColor.gray
+        bottomView.frame = CGRect(x: 0, y: 0, width: 414, height: UIScreen.main.bounds.size.height)
+        bottomView.backgroundColor = UIColor.gray
       
         
-        let nestView = VVNestScrollView.init(frame: self.view.bounds)
+        let nestView = NestScrollView(frame: self.view.bounds)
         
-        nestView.bottomDelegate = bottomView as VVNestBottomViewProtocol
         nestView.backgroundColor = .brown
-        nestView.setTopKeepHeight(120)
-        nestView.configure(topView, bottomView: bottomView, bottomVC: nil)
-        
+        nestView.setTopKeepHeight(90)
+        nestView.set(topView, bottomView: bottomView)
         view.addSubview(nestView)
         
         

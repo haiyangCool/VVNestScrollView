@@ -31,10 +31,10 @@ BottomView should implement NestBottomViewProtol methods
 ******************
 
 */
-public class VVNestScrollView: UIView {
+public class NestScrollView: UIView {
 
     /// 底部图层需要实现该协议，以获取滑动状态，设置相关操作
-    public weak var bottomDelegate: VVNestBottomViewProtocol?
+    public weak var bottom: Bottom?
     
     /**
      *   scrollView  承载上部图层和下部图层
@@ -56,7 +56,7 @@ public class VVNestScrollView: UIView {
     fileprivate var bottomView: UIView?
     
     /// 是否为垂直滑动手势
-    fileprivate var verticalScroll: Bool = false
+    fileprivate var isVerticalScroll: Bool = false
     
     /// 实时滑动过程中确定滑动方向，滑动方向一经确认，在该次滑动过程中方向不再进行变更
 
@@ -74,7 +74,7 @@ public class VVNestScrollView: UIView {
     fileprivate var topKeepHeight: CGFloat = 0;
     
     /// 动态滚动item状态
-    fileprivate lazy var dynamicItem: VVDynamicItem = VVDynamicItem()
+    fileprivate lazy var dynamicItem = DynamicItem()
     
     /// 动画执行
     fileprivate var animator: UIDynamicAnimator?
@@ -103,7 +103,7 @@ public class VVNestScrollView: UIView {
 
 /**Public Methods
  */
-extension VVNestScrollView {
+extension NestScrollView {
     
     /// 该方法在配置 topView和tbottomView 之前设置，否则会出现动画执行问题
     /// - Parameter height:
@@ -113,39 +113,20 @@ extension VVNestScrollView {
     }
     
     /// 配置  top View and bottom View
-    public func configure(_ top: UIView, bottomView bottom: UIView? = nil, bottomVC viewController: UIViewController? = nil) {
-        if let bottom = bottom {
+    public func set(_ topView: UIView, bottomView bottom: Bottom) {
 
-            topView = top
-            bottomView = bottom
-            configure(topView!, bottom: bottomView!)
-            bottomView?.frame = CGRect(origin: CGPoint(x: 0, y: topView!.frame.origin.y), size: (bottom.frame.size))
-
-        }
-        
-        if let bottom = viewController?.view {
-
-            topView = top
-            bottomView = bottom
-            configure(topView!, bottom: bottomView!)
-
-        }
-        if let topV = topView,let bottomV = bottomView {
-            
-            bottomV.frame = CGRect(x: 0, y: topV.frame.size.height, width: bottomV.frame.size.width, height: bottomV.frame.size.height)
-            scrollView.addSubview(topV)
-            scrollView.addSubview(bottomV)
-        }
-        
-        bottomDelegate?.nestBottomView(false)
+        self.bottom = bottom
+        self.topView = topView
+        self.bottomView = bottom.bottomView()
+        configure(topView, bottomView: bottomView!)
+        self.bottom?.bottomViewScrollEnable(false)
     }
     
     /// 为可变topView 添加更新（如过topView高度可以变化，reset TopView）
     func reSetTopView(topView view:UIView) {
         topView = view
         if let topV = topView,let bottomV = bottomView {
-            bottomV.frame = CGRect(origin: CGPoint(x: 0, y: topV.frame.origin.y), size: (bottomV.frame.size))
-            configure(topV, bottom: bottomV)
+            configure(topV, bottomView: bottomV)
         }
     }
     
@@ -160,7 +141,7 @@ extension VVNestScrollView {
 }
 
 // 手势
-extension VVNestScrollView {
+extension NestScrollView {
     
     @objc fileprivate func panGusterReceiver(guster: UIPanGestureRecognizer) {
         
@@ -170,31 +151,31 @@ extension VVNestScrollView {
             animator?.removeAllBehaviors()
             decelerationBehavior = nil
             spingBehavior = nil
-            bottomDelegate?.startTouch()
+            bottom?.bottomViewStartTouch()
         case .changed:
             
             let currentX = guster.translation(in: self).x
             let currentY = guster.translation(in: self).y
-            if fabsf(Float(currentX/currentY)) >= 5.0{
+            if fabsf(Float(currentX/currentY)) >= 20.0{
                 
                 if !scrollDirectionConfirmed {
-                    verticalScroll = false
+                    isVerticalScroll = false
                     scrollDirectionConfirmed = true
                 }
             }else {
                 if !scrollDirectionConfirmed {
-                    verticalScroll = true
+                    isVerticalScroll = true
                     scrollDirectionConfirmed = true
                 }
             }
-            if verticalScroll {
+            if isVerticalScroll {
                 estimateScroll(with: currentY)
             }
 
         case .ended:
-            bottomDelegate?.stopTouch()
+            bottom?.bottomViewStopTouch()
             scrollDirectionConfirmed = false
-            if !verticalScroll {
+            if !isVerticalScroll {
                 return
             }
             dynamicItem.center = self.bounds.origin
@@ -228,7 +209,7 @@ extension VVNestScrollView {
 }
 
 /// 自定义滚动
-extension VVNestScrollView {
+extension NestScrollView {
     
     
     /** 在这里，我们对滚动做出定义
@@ -242,15 +223,15 @@ extension VVNestScrollView {
         /// 整体偏移量超过topViewHeight后,topView 已经隐藏,此时开始调整bottomView
         if Int(scrollView.contentOffset.y) >= Int(topViewHeight) {
             
-            var btmOffsetY = (bottomDelegate?.bottomViewContentOffset().y)! - movedY
+            var btmOffsetY = (bottom?.bottomViewContentOffset().y)! - movedY
             if btmOffsetY < 0 {
                 btmOffsetY = 0
                 scrollView.contentOffset = CGPoint(x: 0, y: scrollView.contentOffset.y-movedY)
-            }else if (btmOffsetY > ((bottomDelegate?.bottomViewContentOffset().y)!-(bottomView?.frame.size.height)!)) {
+            }else if (btmOffsetY > ((bottom?.bottomViewContentOffset().y)!-(bottom?.bottomView().frame.size.height)!)) {
                
-                btmOffsetY = (bottomDelegate?.bottomViewContentOffset().y)! - rubberBandDistance(Double(movedY), dimension: Double((bottomView?.frame.size.height)!))
+                btmOffsetY = (bottom?.bottomViewContentOffset().y)! - rubberBandDistance(Double(movedY), dimension: Double((bottom?.bottomView().frame.size.height)!))
             }
-            bottomDelegate?.nestBottonView(CGPoint(x: 0, y: btmOffsetY))
+            bottom?.bottomViewUpdateContentOffset(CGPoint(x: 0, y: btmOffsetY))
             
         }else {
             
@@ -264,14 +245,12 @@ extension VVNestScrollView {
             }
             scrollView.contentOffset = CGPoint(x: 0, y: mainOffsetY)
             if mainOffsetY == 0 {
-                bottomDelegate?.nestBottonView(CGPoint.zero)
+                bottom?.bottomViewUpdateContentOffset(.zero)
             }
             
         }
-        
-        
-        /// 超出可是区域判断、添加加减速动画
-        let beyondBottom = (bottomDelegate?.bottomViewContentOffset().y)! > (bottomDelegate?.bottomViewContentSize().height)! - (bottomView?.frame.size.height)! + topKeepHeight
+                /// 超出区域判断、添加加减速动画
+        let beyondBottom = (bottom?.bottomViewContentOffset().y)! > (bottom?.bottomViewContentSize().height)! - (bottom?.bottomView().frame.size.height)! + topKeepHeight
 
         let beyondBounds = scrollView.contentOffset.y < 0 || beyondBottom
         
@@ -283,10 +262,10 @@ extension VVNestScrollView {
                 dynamicItem.center = scrollView.contentOffset
                 isMain = true
             }else if (beyondBottom) {
-                dynamicItem.center = (bottomDelegate?.bottomViewContentOffset())!
-                let bottomExcludeHeight = bottomDelegate?.excludeViewHeight() ?? 0
-                
-                let bottomTargetOffsetY = (bottomDelegate?.bottomViewContentSize().height)! - (bottomView?.frame.size.height)! + topKeepHeight + bottomExcludeHeight
+                dynamicItem.center = (bottom?.bottomViewContentOffset())!
+                let bottomExcludeHeight = bottom?.excludeTopHeight() ?? 0
+                //bottomView?.frame.size.height
+                let bottomTargetOffsetY = (bottom?.bottomViewContentSize().height)! - (bottom?.bottomView().frame.size.height)! + topKeepHeight + bottomExcludeHeight
                 target = CGPoint(x: 0, y: bottomTargetOffsetY > 0 ? bottomTargetOffsetY : 0)
                 isMain = false
                 
@@ -310,14 +289,14 @@ extension VVNestScrollView {
                         
                     }
                 }else {
-                    let bottomContentOffsetY = self!.bottomDelegate?.bottomViewContentOffset().y
+                    let bottomContentOffsetY = self!.bottom?.bottomViewContentOffset().y
                     if Int(bottomContentOffsetY!) == Int((self?.dynamicItem.center.y)!) {
                         self?.animator?.removeAllBehaviors()
                         self?.decelerationBehavior = nil
                         self?.spingBehavior = nil
-                        self?.bottomDelegate?.scrollOffBottomBaseLine()
+                        self?.bottom?.scrollOffBottomBaseLine()
                     }else {
-                    self?.bottomDelegate?.nestBottonView((self?.dynamicItem.center)!)
+                    self?.bottom?.bottomViewUpdateContentOffset((self?.dynamicItem.center)!)
                     }
                     
                 }
@@ -334,7 +313,7 @@ extension VVNestScrollView {
 
 /** Private Method
  */
-extension VVNestScrollView {
+extension NestScrollView {
     
     /// 注册pan手势
     fileprivate func registerPanGuster() {
@@ -347,7 +326,7 @@ extension VVNestScrollView {
     /// 配置顶部和底部图层
     /// - Parameter topView: topView
     /// - Parameter view: bottomView
-    fileprivate func configure(_ topView: UIView, bottom view: UIView) {
+    fileprivate func configure(_ topView: UIView, bottomView view: UIView) {
         
         let topHeight = topView.frame.size.height
         let bottomHeight = view.frame.size.height
@@ -357,6 +336,10 @@ extension VVNestScrollView {
         if contentSizeHeight <= bounds.size.height {
             scrollView.isScrollEnabled = false
         }
+        
+        view.frame = CGRect(x: 0, y: topHeight, width: view.frame.size.width, height: bottomHeight)
+        scrollView.addSubview(topView)
+        scrollView.addSubview(view)
     }
     
     fileprivate func rubberBandDistance(_ offset:Double, dimension: Double) -> CGFloat {
@@ -369,7 +352,7 @@ extension VVNestScrollView {
 }
 
 
-extension VVNestScrollView: UIGestureRecognizerDelegate {
+extension NestScrollView: UIGestureRecognizerDelegate {
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true

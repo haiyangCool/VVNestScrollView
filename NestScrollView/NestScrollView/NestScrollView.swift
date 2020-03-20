@@ -38,7 +38,7 @@ public class NestScrollView: UIView {
     
     /**
      *   scrollView  承载上部图层和下部图层
-     *      scrollView 不可响应手势滑动，而是响应我们自定义的滚动方式
+     *   scrollView 不可响应手势滑动，而是响应我们自定义的滚动方式
      */
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -123,7 +123,7 @@ extension NestScrollView {
     }
     
     /// 为可变topView 添加更新（如过topView高度可以变化，reset TopView）
-    func reSetTopView(topView view:UIView) {
+    public func reSetTopView(topView view:UIView) {
         topView = view
         if let topV = topView,let bottomV = bottomView {
             configure(topV, bottomView: bottomV)
@@ -133,7 +133,7 @@ extension NestScrollView {
     /** 在底部视图中如果嵌套了横向滑动的控件，
      如果在横向滑动时，需要停止垂直滚动，则【实时】执行该方法
      */
-    func stopScroll() {
+    public func endScroll() {
         animator?.removeAllBehaviors()
         decelerationBehavior = nil
         spingBehavior = nil
@@ -152,6 +152,7 @@ extension NestScrollView {
             decelerationBehavior = nil
             spingBehavior = nil
             bottom?.bottomViewStartTouch()
+            break
         case .changed:
             
             let currentX = guster.translation(in: self).x
@@ -171,7 +172,7 @@ extension NestScrollView {
             if isVerticalScroll {
                 estimateScroll(with: currentY)
             }
-
+            break
         case .ended:
             bottom?.bottomViewStopTouch()
             scrollDirectionConfirmed = false
@@ -196,12 +197,13 @@ extension NestScrollView {
             }
             animator?.addBehavior(inertialBehavior)
             decelerationBehavior = inertialBehavior
+            break
         case .cancelled:
-            print("")
 //            scrollDirectionConfirmed = false
+            break
         default:
 //            scrollDirectionConfirmed = false
-            print("")
+            break
         }
         guster.setTranslation(CGPoint.zero, in: self)
         
@@ -249,7 +251,7 @@ extension NestScrollView {
             }
             
         }
-                /// 超出区域判断、添加加减速动画
+        /// 超出区域判断、添加加减速动画
         let beyondBottom = (bottom?.bottomViewContentOffset().y)! > (bottom?.bottomViewContentSize().height)! - (bottom?.bottomView().frame.size.height)! + topKeepHeight
 
         let beyondBounds = scrollView.contentOffset.y < 0 || beyondBottom
